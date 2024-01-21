@@ -1,0 +1,83 @@
+backups/snapshots:
+----------
+parmeters
+
+rdb:
+dbfilename backupfile.rdb
+dir /full/dir/path
+save 60 1000 ---after 60 sec if atleast 1000 keys are changed.
+
+aof:
+appendonly on
+appendfilename "filname.aof" ----it automatically rotates the file if it grows large.
+appendfsync everysec
+----------------------------
+
+replicaof primaryip port
+wait 2 0
+===========================
+replication:
+
+primary.conf:
+---------------
+requirepass redis123
+masterauth redis123 ---- password incase this becomes a replica
+appendonly yes
+appendfilename "primary.aof"
+
+redis-server ./primary.conf
+replica.conf:
+-------------
+port 6380
+slaveof primaryip port
+masterauth redis123 ---incase this becomes primary use same a master
+requirepass redis123
+==============================
+Auto failover:
+---------------
+sentinel:
+-----------
+sentinel1.conf
+
+port 5000
+sentinel monitor myprimary 192.168.239.16 6379 2
+sentinel down-after-milliseconds myprimary 5000
+sentinel failover-timeout myprimary 60000
+sentinel auth-pass myprimary redis123
+protected-mode no
+---------------------------
+https://iamabhishek-dubey.medium.com/redis-best-practices-and-performance-tuning-c48611388bbc
+Best practices:
+tcp-keepalive 0 ---for reusing the connections
+use pipelining ---client can send multiple requests to server without waiting for replies and finally can read all the replies at once.
+maxconnections and overcommit memory os parameters
+in cluster mode rdb and aof are not required.
+disable transparent huge pages at os level
+==========================
+cluster documentation: 
+
+https://university.redis.com/courses/course-v1:redislabs+RU301+2024_01/courseware/d3a7de6d376949619807746e7dab34e2/543f51ed47684bd6823fe78bf835eeea/?activate_block_id=block-v1%3Aredislabs%2BRU301%2B2024_01%2Btype%40sequential%2Bblock%40543f51ed47684bd6823fe78bf835eeea
+
+
+
+cluster-enabled yes
+cluster-config-file nodes.conf
+cluster-node-timeout 5000
+
+copy config files to build masters
+replace below parameter values
+
+port 7000
+pidfile "/var/run/redis_7000.pid"
+logfile "/var/log/redis/redis_7000.log"
+appendfilename   /var/lib/appendonly_7000.aof
+
+copy config files to build slaves
+
+port 7001
+pidfile "/var/run/redis_7001.pid"
+logfile "/var/log/redis/redis_7001.log"
+appendfilename   /var/lib/appendonly_7001.aof
+
+slaveof vm-redis 6379
+

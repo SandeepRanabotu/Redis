@@ -1,0 +1,99 @@
+---
+- name: Setting parameter values for a 3 node Redis Cluster
+  hosts: dbservers
+  become: yes
+  become_user: redis
+  tasks:
+    - name: copy config file for master1
+      copy:
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_6000.conf"
+    - name: edit parameter values for master1
+      lineinfile:
+        dest: /etc/redis/redis_6000.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 6000' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_6000.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_6000.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_6000.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-6000.conf'}    
+    - name: copy config file for slave1
+      copy:
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_6001.conf"
+    - name: edit parameter values for slave1
+      lineinfile:
+        dest: /etc/redis/replica_6001.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 6001' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_6001.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_6001.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_6001.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-6001.conf'}   
+        - { regexp: '^slaveof', line: 'slaveof vm-redis 6000'} 
+    - name: copy config file for master2
+      copy:
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_7000.conf"
+    - name: edit parameter values for master2
+      lineinfile:
+        dest: /etc/redis/redis_7000.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 7000' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_7000.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_7000.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_7000.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-7000.conf'}    
+    - name: copy config file for slave2
+      copy:
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_7001.conf"
+    - name: edit parameter values for slave2
+      lineinfile:
+        dest: /etc/redis/replica_7001.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 7001' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_7001.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_7001.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_7001.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-7001.conf'}  
+        - { regexp: '^slaveof', line: 'slaveof vm-redis 7000'} 
+    - name: copy config file for master3
+      copy:
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_8000.conf"
+    - name: edit parameter values for master2
+      lineinfile:
+        dest: /etc/redis/redis_8000.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 8000' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_8000.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_8000.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_8000.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-8000.conf'}    
+    - name: copy config file for slave2
+      copy:
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_8001.conf"
+    - name: edit parameter values for slave2
+      lineinfile:
+        dest: /etc/redis/replica_8001.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 8001' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_8001.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_8001.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename /var/lib/appendonly_8001.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-8001.conf'}  
+        - { regexp: '^slaveof', line: 'slaveof vm-redis 8000'}

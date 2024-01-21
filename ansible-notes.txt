@@ -1,0 +1,10 @@
+yum install anisble
+
+ssh-keygen 
+
+cat id_rsa.pub >> /home/redis/.ssh/authorized_keys
+
+chmod 600 ~/.ssh/authorized_keys
+
+ansible -i inventory all -m "shell" -a "ls -ltr"
+
