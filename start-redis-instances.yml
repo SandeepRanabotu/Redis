@@ -5,7 +5,7 @@
   become_user: redis
   tasks:
     - name: starting all the primary and replica instances of a cluster
-      command: "{{items}}"
+      command: "{{item}}"
       with_items: 
         - "redis-server /etc/redis/redis_6000.conf &"
         - "redis-server /etc/redis/replica_6001.conf &"
