@@ -1,0 +1,15 @@
+---
+- name: start redis instances
+  hosts: dbservers
+  become: yes
+  become_user: redis
+  tasks:
+    - name: starting all the primary and replica instances of a cluster
+      command: {{"items"}}
+      with_items: 
+        - "redis-server /etc/redis/redis_6000.conf &"
+        - "redis-server /etc/redis/replica_6001.conf &"
+        - "redis-server /etc/redis/redis_7000.conf &"
+        - "redis-server /etc/redis/replica_7001.conf &"
+        - "redis-server /etc/redis/redis_8000.conf &"
+        - "redis-server /etc/redis/replica_8001.conf &"
