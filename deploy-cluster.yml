@@ -6,11 +6,12 @@
   tasks:
     - name: copy config file for master1
       copy:
-        remote_src: "/etc/redis/redis.conf"
-        remote_dest: "/etc/redis/redis_6000.conf"
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_6000.conf"
+        remote_src: yes
     - name: edit parameter values for master1
       lineinfile:
-        remote_dest: /etc/redis/redis_6000.conf
+        dest: /etc/redis/redis_6000.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -21,11 +22,12 @@
         - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-6000.conf'}    
     - name: copy config file for slave1
       copy:
-        remote_src: "/etc/redis/replica.conf"
-        remote_dest: "/etc/redis/replica_6001.conf"
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_6001.conf"
+        remote_src: yes
     - name: edit parameter values for slave1
       lineinfile:
-        remote_dest: /etc/redis/replica_6001.conf
+        dest: /etc/redis/replica_6001.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -37,11 +39,12 @@
         - { regexp: '^slaveof', line: 'slaveof vm-redis 6000'} 
     - name: copy config file for master2
       copy:
-        remote_src: "/etc/redis/redis.conf"
-        remote_dest: "/etc/redis/redis_7000.conf"
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_7000.conf"
+        remote_src: yes
     - name: edit parameter values for master2
       lineinfile:
-        remote_dest: /etc/redis/redis_7000.conf
+        dest: /etc/redis/redis_7000.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -52,11 +55,12 @@
         - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-7000.conf'}    
     - name: copy config file for slave2
       copy:
-        remote_src: "/etc/redis/replica.conf"
-        remote_dest: "/etc/redis/replica_7001.conf"
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_7001.conf"
+        remote_src: yes
     - name: edit parameter values for slave2
       lineinfile:
-        remote_dest: /etc/redis/replica_7001.conf
+        dest: /etc/redis/replica_7001.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -68,11 +72,12 @@
         - { regexp: '^slaveof', line: 'slaveof vm-redis 7000'} 
     - name: copy config file for master3
       copy:
-        remote_src: "/etc/redis/redis.conf"
-        remote_dest: "/etc/redis/redis_8000.conf"
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_8000.conf"
+        remote_src: yes
     - name: edit parameter values for master2
       lineinfile:
-        remote_dest: /etc/redis/redis_8000.conf
+        dest: /etc/redis/redis_8000.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
@@ -83,11 +88,12 @@
         - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-8000.conf'}    
     - name: copy config file for slave2
       copy:
-        remote_src: "/etc/redis/replica.conf"
-        remote_dest: "/etc/redis/replica_8001.conf"
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_8001.conf"
+        remote_src: yes
     - name: edit parameter values for slave2
       lineinfile:
-        remote_dest: /etc/redis/replica_8001.conf
+        dest: /etc/redis/replica_8001.conf
         regexp: "{{ item.regexp }}"
         line: "{{ item.line }}"
       loop:
