@@ -79,7 +79,7 @@
         src: "/etc/redis/redis.conf"
         dest: "/etc/redis/redis_8000.conf"
         remote_src: yes
-    - name: edit parameter values for master2
+    - name: edit parameter values for master3
       lineinfile:
         dest: /etc/redis/redis_8000.conf
         regexp: "{{ item.regexp }}"
@@ -91,12 +91,12 @@
         - { regexp: '^appendfilename', line: 'appendfilename appendonly_8000.aof'}
         - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-8000.conf'}  
         - { regexp: '^daemonize', line: 'daemonize yes'}  
-    - name: copy config file for slave2
+    - name: copy config file for slave3
       copy:
         src: "/etc/redis/replica.conf"
         dest: "/etc/redis/replica_8001.conf"
         remote_src: yes
-    - name: edit parameter values for slave2
+    - name: edit parameter values for slave3
       lineinfile:
         dest: /etc/redis/replica_8001.conf
         regexp: "{{ item.regexp }}"
