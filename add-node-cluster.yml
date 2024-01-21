@@ -1,0 +1,46 @@
+---
+- name: Adding a node to a Redis Cluster
+  hosts: dbservers
+  become: yes
+  become_user: redis
+  tasks:
+    - name: copy config file for master4
+      copy:
+        src: "/etc/redis/redis.conf"
+        dest: "/etc/redis/redis_9000.conf"
+        remote_src: yes
+    - name: edit parameter values for master4
+      lineinfile:
+        dest: /etc/redis/redis_9000.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 9000' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_9000.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_9000.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename appendonly_9000.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-9000.conf'}
+        - { regexp: '^daemonize', line: 'daemonize yes'}    
+    - name: copy config file for slave4
+      copy:
+        src: "/etc/redis/replica.conf"
+        dest: "/etc/redis/replica_9001.conf"
+        remote_src: yes
+    - name: edit parameter values for slave4
+      lineinfile:
+        dest: /etc/redis/replica_9001.conf
+        regexp: "{{ item.regexp }}"
+        line: "{{ item.line }}"
+      loop:
+        - { regexp: '^port', line: 'port 9001' }
+        - { regexp: '^pidfile', line: 'pidfile "/var/run/redis_9001.pid"' }
+        - { regexp: '^logfile', line: 'logfile "/var/log/redis/redis_9001.log"' }
+        - { regexp: '^appendfilename', line: 'appendfilename appendonly_9001.aof'}
+        - { regexp: '^cluster-config-file', line: 'cluster-config-file nodes-9001.conf'}   
+        - { regexp: '^slaveof', line: '#slaveof vm-redis 9000'} 
+        - { regexp: '^daemonize', line: 'daemonize yes'}
+    - name: start master4 and slave4 instances
+      command: "{{item}}"
+      with_items:
+        - "redis-server /etc/redis/redis_9000.conf"
+        - "redis-server /etc/redis/replica_9001.conf"

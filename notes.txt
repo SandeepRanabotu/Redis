@@ -79,5 +79,13 @@ pidfile "/var/run/redis_7001.pid"
 logfile "/var/log/redis/redis_7001.log"
 appendfilename   /var/lib/appendonly_7001.aof
 
-slaveof vm-redis 6379
+#slaveof vm-redis 6379
 
+installed redis 7 using centos remi repository
+https://www.howtoforge.com/how-to-install-and-secure-redis-on-centos-7/
+
+redis-cli -h vm-redis -p 6000 -a redis123 --cluster create vm-redis:6000 vm-redis:7000 vm-redis:8000 vm-redis:6001 vm-redis:7001 vm-redis:8001 --cluster-replicas 1
+
+yes
+
+[redis@vm-redis redis]$ redis-cli -p 7000 -a redis123cluster nodes

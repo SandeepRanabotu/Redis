@@ -13,4 +13,4 @@
         - "redis-server /etc/redis/replica_7001.conf"
         - "redis-server /etc/redis/redis_8000.conf"
         - "redis-server /etc/redis/replica_8001.conf"
-        - "redis-cli --cluster create vm-redis:6000 vm-redis:7000 vm-redis:8000 vm-redis:6001 vm-redis:7001 vm-redis:8001 --cluster-replicas 1"
+        #- "redis-cli -h vm-redis -p 6000 -a redis123 --cluster create vm-redis:6000 vm-redis:7000 vm-redis:8000 vm-redis:6001 vm-redis:7001 vm-redis:8001 --cluster-replicas 1"
