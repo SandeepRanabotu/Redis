@@ -88,4 +88,19 @@ redis-cli -h vm-redis -p 6000 -a redis123 --cluster create vm-redis:6000 vm-redi
 
 yes
 
-[redis@vm-redis redis]$ redis-cli -p 7000 -a redis123cluster nodes
+[redis@vm-redis redis]$ redis-cli -p 7000 -a redis123 cluster nodes
+
+[redis@vm-redis redis]$ redis-cli -p 7000 -a redis123 --cluster del-node vm-redis:9001 49618435be39894544a1028df757c94add2e0b74
+
+[redis@vm-redis redis]$ redis-cli -p 7000 -a redis123 --cluster add-node vm-redis:9000 vm-redis:7000
+
+[redis@vm-redis ~]$ redis-cli -p 7000 -a redis123 --cluster add-node vm-redis:9001 vm-redis:7000 --cluster-slave --cluster-master-id d523c98f9b95c9199b6e1f3a7ccd532
+
+[redis@vm-redis ~]$ redis-cli -p 6000 -a redis123 --cluster reshard vm-redis:6000
+
+---16384/4=4096
+4096
+all
+yes
+
+$ redis-cli -p 7000 -a redis123 cluster slots
